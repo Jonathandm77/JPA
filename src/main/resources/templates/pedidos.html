@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--todo lo q sea link, script, se mete en el head(cosas q no se ven)-->
+
+<head th:insert="librerias::librerias">
+</head>
+
+<body>
+<div class="container">
+	<header>
+		<!--menu de arriba, th:Thymeleaf, plantilla html.-->
+		<div th:insert="top::top"></div>
+
+	</header>
+	<h1>Pedidos en Spring</h1>
+
+	<!-- imprimir tabla pedidos-->
+
+	<table class="table table-hover">
+		<!--hover(remarca)-->
+		<thead class="table-dark bg-info text-white">
+			<!--bg-info(letra de la tabla...)-->
+			<tr>
+				<!--cabeceras-->
+				<th>Id</th>
+				<th>Nombre Alumno</th>
+				<th>Bocadillos</th>
+				<th>Precio</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!--empty tengo o no pedidos-->
+			<!--th:if: si mis pedidos tiene o no tiene pedidos, sino imprime NO HAY ALUMNOS-->
+			<!--acceder a un objeto q hemos definido en el controlador ($ nombre del attr del modelo.empty(true(crea el tr)/false(no crea el tr)))-->
+			<tr th:if="${listaPedidos.Empty}">
+				<td colspan="2"> No hay pedidos </td>
+			</tr>
+			<!--th:each=cada pedido q este en mi variable ListaPedidos(controlador) llamale pedido-->
+			<tr th:each="pedido:${listaPedidos}">
+				<!--celda-->
+				<td>
+					<!--enlace=yo hago click ID pedido me mande al controlador /pedidos/id-->
+					<!--@: permite decirle que parte de nuestro pedido.controller va recibir esa peticion, de ese click-->
+					<!--$:acceder a una variable dentro de th. id= attr id de objeto pedido-->
+					<a th:href="@{/pedidos/{id}(id=${pedido.id})}" class="btn btn-primary btn-sm">
+						<!--imprimir el id, con etiqueta span. id del pedido(${pedido.id}-->
+						<span th:text="${pedido.id}"></span>
+					</a>
+
+				</td>
+				<td>
+					<!--imprimir el id, con etiqueta span. acceder nombre del alumno(${alumno.nombre}-->
+					<span th:text="${pedido.getAlumno.getNombre}"></span>
+				</td>
+				<td>
+					<span th:each="bocadillo:${pedido.bocadillos}">
+						<span th:text="${bocadillo.getNombre}">Nombre del bocadillo
+							<span>, </span>
+						</span>
+					</span>
+				</td>
+				<td>
+					<span th:text="${pedido.precio}">Precio</span>
+				</td>
+
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="col-2 float-right">
+		<div class="p-5">
+			<!--primary boton azul-->
+			<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#crearMensaje">
+				+ </button>
+		</div>
+	</div>
+
+
+	<!--create modal-->
+	<div class="modal fade" id="crearMensaje">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">Crear pedido</h4>
+					<button class="close btn btn-danger" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">x</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="error-text">crear pedido nuevo:</p>
+
+
+					<form action="#" th:action="@{/pedidos/add/}" th:object="${pedidoNuevo}" method="post">
+						<div class="form-row">
+							<div class="form-group mt-1">
+								<label for="texto">Seleccionar alumno</label>
+								<select th:field="*{alumno.id}" class="form-control" id="exampleFormControlSelect1">
+									<option th:each="alumno:${listaAlumnos}" th:value="${alumno.id}"
+										th:text="${alumno.nombre}" value="">Seleccionar alumnos</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group mt-4">
+								<label for="texto">Seleccionar bocadillos</label>
+								<select th:field="*{bocadillos}" multiple="true" class="form-control selectpicker"
+									name="bocadillos" id="bocadillos">
+									<option th:each="b:${listaBocadillos}" th:value="${b.id}" th:text="${b.nombre}"
+										value="">Seleccionar bocadillos</option>
+								</select>
+							</div>
+						</div>
+
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary btn-sm" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+					<input type="submit" value="Crear pedido" class="btn btn-primary float-right" />
+
+
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!--fin create modal-->
+</div>
+	</body>
+</html>
