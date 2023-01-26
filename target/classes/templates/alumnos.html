@@ -14,7 +14,7 @@
 				<th>Id </th>
 				<th>Nombre </th>
 				<th>Editar </th>
-				<th>Borrar </th>
+				<th sec:authorize="hasAuthority('ROLE_ADMIN')">Borrar </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,7 +34,7 @@
 					Modificar
 					</a>
 				</td>
-				<td> 
+				<td sec:authorize="hasAuthority('ROLE_ADMIN')"> 
 					<a th:attr="data-target='#modal-delete'+${alumno.id}" data-toggle="modal" data-target="#modal-delete" class="btn btn-primary btn-sm text-white pointer">
 					Eliminar
 					</a>
